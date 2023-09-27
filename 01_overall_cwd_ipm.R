@@ -9,7 +9,7 @@
 
 rm(list = ls())
 
-setwd("~/Documents/ipm/cwd_ipm_weekly_ew")
+setwd("~/Documents/ipm/cwd_ipm_sim1")
 
 library(viridis)
 library(RColorBrewer)
@@ -48,80 +48,57 @@ library(ggh4x)
 
 source("support_functions.R")
 
-###########################################################
-# Load Data
-###########################################################
-
-source("02_load_clean_data_foi.R")
-source("03_load_clean_data_survival.R")
-
 ###############################################################
-### Load/clean Spatially referenced data
+# Load "Data" i.e. posterior summary stats from data model fit
 ###############################################################
 
-source("04_homerange_data_survival.R")
+source("02_load_all_data_to_run.R")
 
-###########################################################
-### Format data for fitting age at harvest data
-###########################################################
+###############################################################
+# Generate simulated data
+###############################################################
 
-source("05_load_calibrate_data_aah.R")
-source("06_load_agg_data_aah.R")
+source("04_generate_data.R")
 
-###########################################################
-### Format data for fitting age-period survival models
-###########################################################
 
-source("07_format_data_survival.R")
+###############################################################
+# Partition simulated data into cases
+###############################################################
 
-##########################################################
-### Setup collar data for FOI + Survival
-##########################################################
-
-source("08_format_data_combine_foi_surv.R")
-
-##########################################################
-### Setup collar data for FOI + Survival
-##########################################################
-
-source("09_format_data_cause.R")
+source("05_data_cases.R")
 
 ###########################################################
 ### Setup consts etc for running the model
 ###########################################################
 
-source("10_prelim_survival.R")
-source("11_prelim_foi.R")
-source("12_prelim_aah.R")
+source("06_prelim_survival.R")
+
+source("07_prelim_foi.R")
 
 ###########################################################
 ### Likelihoods
 ###########################################################
 
-# source("13_distributions_check.R")
-source("13_distributions.R")
-# source("13_distributions_hunt.R")
+source("08_distributions.R")
 
 ###########################################################
 ### Functions for Efficient Calculations
 ###########################################################
 
-source("14_calculations.R")
+# source("09_calculations.R")
 
 ###########################################################
 ### Run model
 ###########################################################
 
-source("15_modelcode.R")
+source("10_modelcode.R")
 
 ###########################################################
 ### Run model
 ###########################################################
 
-source("16_run_model.R")
-
-# source("17_run_model_par.R")
-# source("17_run_model_par_fun.R")
+source("11_run_model.R")
+# source("11_run_model_par.R")
 
 ###########################################################
 ### Post processing
