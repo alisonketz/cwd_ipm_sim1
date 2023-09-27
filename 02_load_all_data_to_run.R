@@ -10,6 +10,7 @@ load("../truncated_joint_survival_foi/results/N/fit_sum_N.Rdata")
 
 n_ageclassm <- 6
 n_ageclassf <- 7
+n_ageclass <- n_ageclassm
 
 period_effect_true <- fit_sum[grep("period_effect_surv", rownames(fit_sum)), 1]
 nT_period <- length(period_effect_true)
