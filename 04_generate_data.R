@@ -4,7 +4,7 @@
 ###
 ##################################################################
 
-source("03_fun_generate_data_ap_survival_foi.R")
+source("03_fun_generate_data.R")
 
 dat <- ageperiod_surv_foi_sim_data(
             beta0_survival_sus = beta0_survival_sus,

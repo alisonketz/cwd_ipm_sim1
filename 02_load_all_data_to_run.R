@@ -6,7 +6,7 @@
 ###
 #######################################################################
 
-load("../truncated_joint_survival_foi/results/N/fit_sum_N.Rdata")
+load("datafiles/fit_sum_N.Rdata")
 
 n_ageclassm <- 6
 n_ageclassf <- 7
