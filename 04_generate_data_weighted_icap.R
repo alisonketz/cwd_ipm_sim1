@@ -45,19 +45,49 @@ dat <- ageperiod_surv_foi_sim_data(
 ### because we aren't accounting for 
 ### disease-associated mortality in the generating function
 ##############################################################
+icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
+icap_eval_plot <- ggplot(data = icap_eval_df) +
+      geom_histogram(aes(x = left_age),bins = 50) +
+      theme_bw() +
+      theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 14),
+        plot.title = element_text(size = 16)
+  )
+
+
+ggsave(paste0("figures/icap_eval_left_age.png"),
+      icap_eval_plot,
+      height = 6,
+      width = 8)
+
+icap_eval_df$weights <- icap_eval_df$left_age/sum(icap_eval_df$left_age)
+
+icap_weights_plot <- ggplot(data = icap_eval_df) +
+      geom_point(aes(x = left_age,y = weights), size = 1.3, alpha = .5) +
+      theme_bw() +
+      xlab("Age at Entry") + 
+      theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 14),
+        plot.title = element_text(size = 16)
+  )
+
+
+ggsave(paste0("figures/icap_eval_weights.png"),
+      icap_weights_plot,
+      height = 6,
+      width = 8)
+
 
 n_remove <- sum(dat$pos1) - round(sum(dat$pos1)/5)
-png("hist_icap_leftage_toweight.png")
-hist(dat$left_age[dat$pos1==1],breaks = 100)
-dev.off()
-
-
-indx_remove <- sample(which(dat$pos1 == TRUE),
-                      n_remove,
-                      replace = FALSE,
-                      prob = dat$left_age[dat$pos1==1]/sum(dat$left_age[dat$pos1==1])
-                      ) 
+indx_remove <- sample(which(dat$pos1==TRUE),n_remove,replace=FALSE) 
 n_ind <- dat$n_ind - n_remove
+
 
 
 ##############################################################

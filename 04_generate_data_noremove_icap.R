@@ -45,19 +45,49 @@ dat <- ageperiod_surv_foi_sim_data(
 ### because we aren't accounting for 
 ### disease-associated mortality in the generating function
 ##############################################################
+# icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
+# icap_eval_plot <- ggplot(data = icap_eval_df) +
+#       geom_histogram(aes(x = left_age),bins = 50) +
+#       theme_bw() +
+#       theme(axis.text = element_text(size = 12),
+#         axis.title = element_text(size = 16),
+#         strip.text = element_text(size = 16),
+#         legend.title = element_text(size = 16),
+#         legend.text = element_text(size = 14),
+#         plot.title = element_text(size = 16)
+#   )
 
-n_remove <- sum(dat$pos1) - round(sum(dat$pos1)/5)
-png("hist_icap_leftage_toweight.png")
-hist(dat$left_age[dat$pos1==1],breaks = 100)
-dev.off()
+
+# ggsave(paste0("figures/icap_eval_left_age.png"),
+#       icap_eval_plot,
+#       height = 6,
+#       width = 8)
+
+# icap_eval_df$weights <- icap_eval_df$left_age/sum(icap_eval_df$left_age)
+
+# icap_weights_plot <- ggplot(data = icap_eval_df) +
+#       geom_point(aes(x = left_age,y = weights), size = 1.3, alpha = .5) +
+#       theme_bw() +
+#       xlab("Age at Entry") + 
+#       theme(axis.text = element_text(size = 12),
+#         axis.title = element_text(size = 16),
+#         strip.text = element_text(size = 16),
+#         legend.title = element_text(size = 16),
+#         legend.text = element_text(size = 14),
+#         plot.title = element_text(size = 16)
+#   )
 
 
-indx_remove <- sample(which(dat$pos1 == TRUE),
-                      n_remove,
-                      replace = FALSE,
-                      prob = dat$left_age[dat$pos1==1]/sum(dat$left_age[dat$pos1==1])
-                      ) 
-n_ind <- dat$n_ind - n_remove
+# ggsave(paste0("figures/icap_eval_weights.png"),
+#       icap_weights_plot,
+#       height = 6,
+#       width = 8)
+
+
+# n_remove <- sum(dat$pos1) - round(sum(dat$pos1)/5)
+# indx_remove <- sample(which(dat$pos1==TRUE),n_remove,replace=FALSE) 
+# n_ind <- dat$n_ind - n_remove
+n_ind <- dat$n_ind
 
 
 ##############################################################
@@ -67,14 +97,14 @@ n_ind <- dat$n_ind - n_remove
 ##############################################################
 
 df_fit <- data.frame(id = 1:n_ind,
-                     left_age = dat$left_age[-indx_remove],
-                     right_age = dat$right_age[-indx_remove],
-                     left_period = dat$left_period[-indx_remove],
-                     right_period = dat$right_period[-indx_remove],
-                     rt_censor = dat$rt_censor[-indx_remove],
-                     cwd_cap = dat$pos1[-indx_remove],
-                     cwd_mort = dat$pos2[-indx_remove],
-                     inf_age = dat$inf_age[-indx_remove]
+                     left_age = dat$left_age,
+                     right_age = dat$right_age,
+                     left_period = dat$left_period,
+                     right_period = dat$right_period,
+                     rt_censor = dat$rt_censor,
+                     cwd_cap = dat$pos1,
+                     cwd_mort = dat$pos2,
+                     inf_age = dat$inf_age
                      )
 
 df_fit$inf_period = df_fit$right_age - df_fit$inf_age + df_fit$left_period

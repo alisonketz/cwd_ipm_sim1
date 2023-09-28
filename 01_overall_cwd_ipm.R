@@ -58,8 +58,9 @@ source("02_load_all_data_to_run.R")
 # Generate simulated data
 ###############################################################
 
-source("04_generate_data.R")
-
+# source("04_generate_data.R")
+# source("04_generate_data_weighted_icap.R")
+source("04_generate_data_noremove_icap.R")
 
 ###############################################################
 # Partition simulated data into cases
