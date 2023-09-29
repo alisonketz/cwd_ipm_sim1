@@ -5,7 +5,8 @@ ageperiod_surv_foi_sim_data <- function(
     age_effect,
     period_effect,
     nT_age,
-    nT_period
+    nT_period,
+    prop_recap = 0.03
     ) {
   
   set.seed(12345)
@@ -123,9 +124,11 @@ ageperiod_surv_foi_sim_data <- function(
     hazard_sus[i,left_age[i]:(left_age[i] + maxtimes[i] - 1)] <-  exp(beta0_sus+
                       age_effect_surv[left_age[i]:(left_age[i] + maxtimes[i] - 1)] +
                       period_effect_surv[left_period[i]:(left_period[i] + maxtimes[i] - 1)])
+
     hazard_inf[i,left_age[i]:(left_age[i] + maxtimes[i] - 1)] <- exp(beta0_inf+
                       age_effect_surv[left_age[i]:(left_age[i] + maxtimes[i] - 1)] +
                       period_effect_surv[left_period[i]:(left_period[i] + maxtimes[i] - 1)])
+
     hazard_foi[i,1:(left_age[i] + maxtimes[i] - 1)] <- exp(
                       foi_age_effect[1:(left_age[i] + maxtimes[i] - 1)])
   }
@@ -222,7 +225,7 @@ ageperiod_surv_foi_sim_data <- function(
       }
     }
     # test2yes <- ifelse(pos1[i] == 1, 0, rbinom(1, 1, p_test2))
-    # if(test2yes == 1){
+    # if(test2yes == 1) {
     #   test2[i] <- right_age[i] # for simplicity, assume test2 date is immediately after mortality or censoring
     #   pos2[i] <- ifelse(!is.na(inf_age[i]), 1, 0)
     # }
@@ -239,6 +242,73 @@ ageperiod_surv_foi_sim_data <- function(
   }
 
   right_period <- right_age - left_age + left_period
+
+
+  ########################################
+  ### setup data into overall data frame
+  ########################################
+
+  df_fit <- data.frame(id = 1:n_ind,
+                      left_age = left_age,
+                      right_age  = right_age,
+                      left_period = left_period,
+                      right_period = right_period,
+                      rt_censor = rt_censor,
+                      cwd_cap = pos1,
+                      cwd_mort = pos2,
+                      inf_age = inf_age
+                      )
+
+  df_fit$inf_period = df_fit$right_age - df_fit$inf_age + df_fit$left_period
+
+  ### setting up in terms of e/r/s
+  df_fit$e_age <- df_fit$left_age
+  df_fit$r_age <- df_fit$right_age
+  df_fit$s_age <- df_fit$right_age
+  df_fit$r_age[df_fit$rt_censor == 0] <- df_fit$r_age[df_fit$rt_censor == 0] - 1
+  df_fit$s_age[df_fit$rt_censor == 1] <- NA
+
+
+  df_fit$e_period <- df_fit$left_period
+  df_fit$r_period <- df_fit$right_period
+  df_fit$s_period <- df_fit$right_period
+  df_fit$r_period[df_fit$rt_censor == 0] <- df_fit$r_period[df_fit$rt_censor == 0] - 1
+  df_fit$s_period[df_fit$rt_censor == 1] <- NA
+
+  ########################################
+  ### setup all data types
+  ########################################
+
+
+
+  ################################################
+  ###
+  ### remove the over-abundance infected
+  ### at capture, build in 4 options
+  ###   no removal, 
+  ###   random sample,
+  ###   weighted sample by left_age/sum(left_age)
+  ###   weighted sample by (1-1/left_age)/sum(1-1/left_age))
+  ###
+  #################################################
+
+
+  ########################################
+  ### Sampling structuring recap values
+  ########################################
+
+  ### this is just a sketch and not functional yet
+
+  # recap_sample_indx <- which((df_typr_period - e_period) > 52)
+  # recap_sample <- sample(recap_sample_indx,prop_recap)
+
+  # #catch if there's no recap_sample_indx
+  # if(length(recap_sample == 0)) recap_sample <- recap_sample_indx[1]
+
+  # for(i in recap_sample_indx){
+  #   df$recap[i] <- sample(e_period[i]:(r_period[i]-2), size = 1, replace = FALSE)
+  # }
+
 
   ########################################
   ### Return values

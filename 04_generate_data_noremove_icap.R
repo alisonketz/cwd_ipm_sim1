@@ -31,21 +31,12 @@ dat <- ageperiod_surv_foi_sim_data(
 # which(dat$inf_age[!is.na(inf_age)] < dat$left_age[!is.na(inf_age)])
 
 
-### Set data generated from the data generating function
-# left_age <- dat$left_age
-# right_age <- dat$right_age
-# left_period <- dat$left_period
-# right_period <- dat$right_period
-# rt_censor <- dat$rt_censor
-# n_ind <- dat$n_ind
-# inf_age <- dat$inf_age
-
 ##############################################################
 ### there are too many deer infected at to capture
 ### because we aren't accounting for 
 ### disease-associated mortality in the generating function
 ##############################################################
-# icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
+icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
 # icap_eval_plot <- ggplot(data = icap_eval_df) +
 #       geom_histogram(aes(x = left_age),bins = 50) +
 #       theme_bw() +
@@ -64,6 +55,7 @@ dat <- ageperiod_surv_foi_sim_data(
 #       width = 8)
 
 # icap_eval_df$weights <- icap_eval_df$left_age/sum(icap_eval_df$left_age)
+# icap_eval_df$weights2 <- (1 - 1/icap_eval_df$left_age)/sum((1 - 1/icap_eval_df$left_age))
 
 # icap_weights_plot <- ggplot(data = icap_eval_df) +
 #       geom_point(aes(x = left_age,y = weights), size = 1.3, alpha = .5) +
@@ -77,8 +69,26 @@ dat <- ageperiod_surv_foi_sim_data(
 #         plot.title = element_text(size = 16)
 #   )
 
+# icap_weights2_plot <- ggplot(data = icap_eval_df) +
+#       geom_point(aes(x = left_age,y = weights2), size = 1.3, alpha = .5) +
+#       theme_bw() +
+#       xlab("Age at Entry") + 
+#       theme(axis.text = element_text(size = 12),
+#         axis.title = element_text(size = 16),
+#         strip.text = element_text(size = 16),
+#         legend.title = element_text(size = 16),
+#         legend.text = element_text(size = 14),
+#         plot.title = element_text(size = 16)
+#   )
 
 # ggsave(paste0("figures/icap_eval_weights.png"),
+#       icap_weights_plot,
+#       height = 6,
+#       width = 8)
+
+
+
+# ggsave(paste0("figures/icap_eval_weights2.png"),
 #       icap_weights_plot,
 #       height = 6,
 #       width = 8)

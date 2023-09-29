@@ -14,7 +14,7 @@
 fit_sum <- mcmcout$summary$all.chains
 out <- mcmcout$samples
 
-modelid <- "A"
+modelid <- "D"
 
 #############################
 ### Saving Model Description
@@ -225,7 +225,7 @@ ggsave(paste0("figures/",modelid,"/beta0_survival_plot","_",modelid,".png"),
       width = 10)
 
 fit_sum[grep("beta0_survival_",rownames(fit_sum)),]
-write.csv(fit_sum[grep("beta0_survival_",rownames(fit_sum)),],file = paste0("results/",modelid,"/beta0_survival_summary.csv"))
+write.csv(fit_sum[grep("beta0_survival_",rownames(fit_sum)),],file = paste0("results/",modelid,"/beta0_survival_summary_",modelid,".csv"))
 
 
 ###############################################
@@ -305,6 +305,26 @@ ggsave(paste0("figures/",modelid,"/age_effect_",modelid,".png"),age_effect_plot,
 
 save(mcmcout,file = paste0("results/",modelid,"/mcmcout_",modelid,".Rdata"))
 save(fit_sum,file = paste0("results/",modelid,"/fit_sum_",modelid,".Rdata"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #############################

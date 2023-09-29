@@ -35,6 +35,8 @@ df_fit_sus_cens_postno <- df_fit[which(df_fit$cwd_cap == 0 &
 n_sus_cens_postno <- nrow(df_fit_sus_cens_postno)
 
 
+
+
 ################################################
 ### checking that these cases add up to the 
 ### total number of generated individuals
