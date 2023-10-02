@@ -267,7 +267,7 @@ modelcode <- nimbleCode({
     psi[1:n_age] <- calc_infect_prob(age_lookup = age_lookup[1:n_age],
                         n_age = n_age,
                         yr_start = yr_start_age[1:n_yr_start_age],
-                        foi_age_effect = foi_age_effect[1:n_ageclass],
+                        age_foi = foi_age_effect[1:n_ageclass],
                         nT_period = nT_period,
                         n_year = n_year,
                         nT_age_surv_aah = nT_age_surv_aah
