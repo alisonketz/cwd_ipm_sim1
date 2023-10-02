@@ -36,10 +36,14 @@ nimData <- list(
 #######################################
 
 nimConsts <- list(
-    # n_year = 5,
-    n_ageclass = n_ageclassm,
+    n_year = n_year,
+    n_ageclass = n_ageclass,
     nT_period = nT_period,
     nT_age = nT_age,
+    n_yr_start_age = n_yr_start_age,
+    nT_age_short = nT_age_short,
+    nT_age_surv_aah = nT_age_surv_aah,
+    n_age = n_age,
     nknots_age = nknots_age,
     nknots_period = nknots_period,
     nIcapCens = nrow(df_fit_icap_cens),
@@ -67,12 +71,13 @@ initsFun <- function()list(
     sda_period = runif(1, .1, 1),
     alpha_period = rnorm(nknots_period, 0, 1),
     tau_age_foi = runif(1, 1.5, 1.7),
-    foi_age_effect = c(rnorm(1, -10.7, sd = .1),
-                  rnorm(1, -7.55, sd = .1),
-                  rnorm(1, -6.15, sd = .1),
-                  rnorm(1, -5.05, sd = .1),
-                  rnorm(1, -4.6, sd = .1),
-                  rnorm(1, -4.4, sd = .1))
+    foi_age_effect = c(rnorm(1, -10.4, sd = .1),
+                  rnorm(1, -8.5, sd = .1),
+                  rnorm(1, -7.2, sd = .1),
+                  rnorm(1, -6.7, sd = .1),
+                  rnorm(1, -6.7, sd = .1),
+                  rnorm(1, -6.5, sd = .1),
+                  rnorm(1, -6.4, sd = .1))
     )
 nimInits <- initsFun()
 
@@ -93,7 +98,7 @@ Rmodel$initializeInfo()
 
 Cnim <- compileNimble(Rmodel)
 
-for(i in 1:10){beepr::beep(1)}
+# for(i in 1:10){beepr::beep(1)}
 
 #######################################
 ### Parameters to trace in MCMC
@@ -116,10 +121,10 @@ parameters <- c(
               "sda_period",
               "taua_period",
               "ratioinf_period",
-              "period_effect_surv"#,
-              # "psi",
-              # "sn_inf",
-              # "sn_sus",
+              "period_effect_surv",
+              "psi",
+              "sn_inf",
+              "sn_sus"
               # "sh_inf",
               # "sh_sus"#,
                )
@@ -133,13 +138,13 @@ nimMCMC <- buildMCMC(confMCMC)
 CnimMCMC <- compileNimble(nimMCMC,
                           # resetFunctions = TRUE,
                          project = Rmodel)
-for(i in 1:10){beepr::beep(1)}
+# for(i in 1:10){beepr::beep(1)}
 
-reps <- 4000
+reps <- 5000
 bin <- reps * .5
 n_chains <- 3
 
-set.seed(1001)
+# set.seed(1001)
 starttime <- Sys.time()
 mcmcout <- runMCMC(CnimMCMC,
                   niter = reps,
@@ -153,7 +158,7 @@ runtime <- difftime(Sys.time(),
                     starttime,
                     units = "min")
 runtime
-for (i in 1:10) {beepr::beep(1)}
+# for (i in 1:10) {beepr::beep(1)}
 
 # mcmcout$summary
 # end_Rmodel

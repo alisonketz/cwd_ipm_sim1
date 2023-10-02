@@ -4,6 +4,11 @@
 ###
 ################################################################
 
+yr_start_age <- seq(1, nT_age, by = 52)
+yr_start_pop <- seq(20, 228, by = 52)
+n_yr_start_age <- length(yr_start_age)
+# 20  72 124 176 228
+
 ####################################
 ###
 ### Basis function for Age Effects

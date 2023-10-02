@@ -5,16 +5,19 @@
 ###############################################################################################
 
 # source("summarize.R")
-# load("mcmcout.Rdata")
+# load("results/mcmcout.Rdata")
 # load("runtime.Rdata")
 # out <- mcmc.list(mcmcout1)
 # fit_sum <- summarize(out)
 
+modelid <- "D"
+
+load(paste0("results/",modelid,"/mcmcout_",modelid,".Rdata"))
+
+
 # fit_sum <- mcmcout$summary
 fit_sum <- mcmcout$summary$all.chains
 out <- mcmcout$samples
-
-modelid <- "D"
 
 #############################
 ### Saving Model Description
@@ -105,33 +108,33 @@ troy_pal <- met.brewer(name="Troy", n=8, type="discrete")
 ###
 ###############################################
 
-foi_age_indx <- grep("foi_age_effect",rownames(fit_sum))
+# foi_age_indx <- grep("foi_age_effect",rownames(fit_sum))
 
-age_effect_mean <- fit_sum[foi_age_indx,2]
-age_effect_lower <- fit_sum[foi_age_indx,4]
-age_effect_upper <- fit_sum[foi_age_indx,5]
+# age_effect_mean <- fit_sum[foi_age_indx,2]
+# age_effect_lower <- fit_sum[foi_age_indx,4]
+# age_effect_upper <- fit_sum[foi_age_indx,5]
 
-ageclass <- 1:n_ageclass
+# ageclass <- 1:n_ageclass
 
-foi_age_effect_out <- data.frame(ageclass,age_effect_mean,age_effect_lower,age_effect_upper)
+# foi_age_effect_out <- data.frame(ageclass,age_effect_mean,age_effect_lower,age_effect_upper)
 
-foi_age_effect_plot <- ggplot(data =foi_age_effect_out, aes(x = ageclass))+
-  geom_line(aes(x = ageclass,y=age_effect_mean), size = 1)+
-  geom_ribbon(aes(ymin = age_effect_lower,
-                  ymax = age_effect_upper),
-              alpha = .2,
-              linetype = 0)+
-  ggtitle("Age Effect Posterior")+xlab("Age (Years)")+ylab("Effect Size")+
-  theme_bw()#+
-  #scale_x_continuous(breaks = seq(0,nT_age,by=104),labels=seq(0,n_year,by=2))+
-  #scale_color_manual("Year",values = met.brewer("Kandinsky", 2)) +
-  #scale_fill_manual("Year",values = met.brewer("Kandinsky", 2))
-  # theme(axis.text.x = element_text(angle = 90, hjust = 1))
+# foi_age_effect_plot <- ggplot(data =foi_age_effect_out, aes(x = ageclass))+
+#   geom_line(aes(x = ageclass,y=age_effect_mean), size = 1)+
+#   geom_ribbon(aes(ymin = age_effect_lower,
+#                   ymax = age_effect_upper),
+#               alpha = .2,
+#               linetype = 0)+
+#   ggtitle("Age Effect Posterior")+xlab("Age (Years)")+ylab("Effect Size")+
+#   theme_bw()#+
+#   #scale_x_continuous(breaks = seq(0,nT_age,by=104),labels=seq(0,n_year,by=2))+
+#   #scale_color_manual("Year",values = met.brewer("Kandinsky", 2)) +
+#   #scale_fill_manual("Year",values = met.brewer("Kandinsky", 2))
+#   # theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-foi_age_effect_plot
+# foi_age_effect_plot
 
-# ggsave("figures/foi_age_effect.pdf",foi_age_effect_plot)
-ggsave(paste0("figures/",modelid,"/foi_age_effect_",modelid,".png"),foi_age_effect_plot)
+# # ggsave("figures/foi_age_effect.pdf",foi_age_effect_plot)
+# ggsave(paste0("figures/",modelid,"/foi_age_effect_",modelid,".png"),foi_age_effect_plot)
 
 
 ###################################################
@@ -197,8 +200,8 @@ df_beta0_survival <- data.frame(beta0_survival_sus,beta0_survival_inf) %>%
                     pivot_longer(cols = everything())
 names(df_beta0_survival)[1] <- "cwd_status"
 df_beta0_survival$cwd_status <- as.factor(df_beta0_survival$cwd_status)
-levels(df_beta0_survival$cwd_status) <- c("Susceptible","Infected")
-# df_beta0_survival$cwd_status <- factor(df_beta0_survival$cwd_status, levels = c("Susceptible","Infected"))
+levels(df_beta0_survival$cwd_status) <- c("Infected","Susceptible")
+df_beta0_survival$cwd_status <- factor(df_beta0_survival$cwd_status, levels = c("Susceptible","Infected"))
 # max(df_beta0_survival$value)
 
 beta0_survival_plot <- ggplot(df_beta0_survival)+
@@ -210,7 +213,7 @@ beta0_survival_plot <- ggplot(df_beta0_survival)+
     scale_fill_manual(values = troy_pal[c(7, 2)])+
     scale_color_manual(values = troy_pal[c(7, 2)])+
     geom_vline(xintercept = beta0_survival_inf_true,linetype = "dashed") +
-    geom_vline(xintercept = beta0_survival_sus_true,linetype = "dotted") +
+    geom_vline(xintercept = beta0_survival_sus_true,linetype = "dashed") +
     theme(axis.text=element_text(size=14),
             axis.title=element_text(size=16),
             title =element_text(size=18),

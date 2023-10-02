@@ -248,32 +248,32 @@ ageperiod_surv_foi_sim_data <- function(
   ### setup data into overall data frame
   ########################################
 
-  df_fit <- data.frame(id = 1:n_ind,
-                      left_age = left_age,
-                      right_age  = right_age,
-                      left_period = left_period,
-                      right_period = right_period,
-                      rt_censor = rt_censor,
-                      cwd_cap = pos1,
-                      cwd_mort = pos2,
-                      inf_age = inf_age
-                      )
+  # df_fit <- data.frame(id = 1:n_ind,
+  #                     left_age = left_age,
+  #                     right_age  = right_age,
+  #                     left_period = left_period,
+  #                     right_period = right_period,
+  #                     rt_censor = rt_censor,
+  #                     cwd_cap = pos1,
+  #                     cwd_mort = pos2,
+  #                     inf_age = inf_age
+  #                     )
 
-  df_fit$inf_period = df_fit$right_age - df_fit$inf_age + df_fit$left_period
+  # df_fit$inf_period = df_fit$right_age - df_fit$inf_age + df_fit$left_period
 
-  ### setting up in terms of e/r/s
-  df_fit$e_age <- df_fit$left_age
-  df_fit$r_age <- df_fit$right_age
-  df_fit$s_age <- df_fit$right_age
-  df_fit$r_age[df_fit$rt_censor == 0] <- df_fit$r_age[df_fit$rt_censor == 0] - 1
-  df_fit$s_age[df_fit$rt_censor == 1] <- NA
+  # ### setting up in terms of e/r/s
+  # df_fit$e_age <- df_fit$left_age
+  # df_fit$r_age <- df_fit$right_age
+  # df_fit$s_age <- df_fit$right_age
+  # df_fit$r_age[df_fit$rt_censor == 0] <- df_fit$r_age[df_fit$rt_censor == 0] - 1
+  # df_fit$s_age[df_fit$rt_censor == 1] <- NA
 
 
-  df_fit$e_period <- df_fit$left_period
-  df_fit$r_period <- df_fit$right_period
-  df_fit$s_period <- df_fit$right_period
-  df_fit$r_period[df_fit$rt_censor == 0] <- df_fit$r_period[df_fit$rt_censor == 0] - 1
-  df_fit$s_period[df_fit$rt_censor == 1] <- NA
+  # df_fit$e_period <- df_fit$left_period
+  # df_fit$r_period <- df_fit$right_period
+  # df_fit$s_period <- df_fit$right_period
+  # df_fit$r_period[df_fit$rt_censor == 0] <- df_fit$r_period[df_fit$rt_censor == 0] - 1
+  # df_fit$s_period[df_fit$rt_censor == 1] <- NA
 
   ########################################
   ### setup all data types

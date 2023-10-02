@@ -8,9 +8,23 @@
 
 load("datafiles/fit_sum_N.Rdata")
 
+n_year  <- 5
+
 n_ageclassm <- 6
 n_ageclassf <- 7
-n_ageclass <- n_ageclassm
+n_ageclass <- n_ageclassf
+
+n_agef <- 10
+n_agem <- 7
+n_age <- n_agef
+
+nT_age_short_f <- 52 * (n_agef - 1) + 2
+nT_age_surv_aah_f <- 52 * n_agef + 2
+nT_age_short_m <- 52 * (n_agem - 1) + 1
+nT_age_surv_aah_m <- 52 * n_agem + 1 
+
+nT_age_short <- nT_age_short_f
+nT_age_surv_aah <- nT_age_surv_aah_f
 
 period_effect_true <- fit_sum[grep("period_effect_surv", rownames(fit_sum)), 1]
 nT_period <- length(period_effect_true)
@@ -45,7 +59,7 @@ m_age_foi_true <- c(rep(m_age_foi[1:4], each = 52),
 m_age_foi_true <- c(m_age_foi_true,rep(m_age_foi[6],
                     nT_age - length(m_age_foi_true)))
 
-age_foi <- m_age_foi
+age_foi <- f_age_foi
 
 
 ##################################################################
@@ -57,6 +71,6 @@ age_foi <- m_age_foi
 
 beta0_survival_sus <- beta0_survival_sus_true
 beta0_survival_inf <- beta0_survival_inf_true
-foi_age_effect <- m_age_foi_true
+foi_age_effect <- f_age_foi_true
 age_effect <- age_effect_true
 period_effect <- period_effect_true

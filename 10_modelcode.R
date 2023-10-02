@@ -231,4 +231,46 @@ modelcode <- nimbleCode({
           age_lookup = age_lookup[1:nT_age]
           )
 
+    #######################################################################
+    ###
+    ###   Derived parameters: 
+    ###   Annual survival estimates "May 15 - May 14"
+    ###   (not using hazards from Jan - May of the first year)
+    ###
+    ###
+    #######################################################################
+
+    sn_sus[1:n_age, 1:n_year]  <- calc_surv_aah(nT_age = nT_age,
+        nT_period = nT_period,
+        nT_age_short = nT_age_short,
+        nT_age_surv_aah = nT_age_surv_aah,
+        beta0 = beta0_survival_sus,
+        age_effect = age_effect_survival[1:nT_age],
+        period_effect = period_effect_surv[1:nT_period], 
+        yr_start_age = yr_start_age[1:n_yr_start_age],
+        yr_start_pop = yr_start_pop[1:n_year],
+        n_year = n_year,
+        n_age = n_age)
+
+    sn_inf[1:n_age, 1:n_year]  <- calc_surv_aah(nT_age = nT_age,
+        nT_period = nT_period,
+        nT_age_short = nT_age_short,
+        nT_age_surv_aah = nT_age_surv_aah,
+        beta0 = beta0_survival_inf,
+        age_effect = age_effect_survival[1:nT_age],
+        period_effect = period_effect_surv[1:nT_period], 
+        yr_start_age = yr_start_age[1:n_yr_start_age],
+        yr_start_pop = yr_start_pop[1:n_year],
+        n_year = n_year,
+        n_age = n_age)
+
+    psi[1:n_age] <- calc_infect_prob(age_lookup = age_lookup[1:n_age],
+                        n_age = n_age,
+                        yr_start = yr_start_age[1:n_yr_start_age],
+                        foi_age_effect = foi_age_effect[1:n_ageclass],
+                        nT_period = nT_period,
+                        n_year = n_year,
+                        nT_age_surv_aah = nT_age_surv_aah
+                        )
+
 })#end model statement
