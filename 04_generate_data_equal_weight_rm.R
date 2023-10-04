@@ -4,6 +4,9 @@
 ###
 ##################################################################
 
+processnum <- 0
+set.seed(10000 + processnum)
+
 source("03_fun_generate_data.R")
 
 dat <- ageperiod_surv_foi_sim_data(
@@ -13,7 +16,8 @@ dat <- ageperiod_surv_foi_sim_data(
             age_effect = age_effect_true,
             period_effect = period_effect_true,
             nT_age = nT_age,
-            nT_period = nT_period
+            nT_period = nT_period,
+            processnum = processnum
             )
 
 # table(dat$pos1)

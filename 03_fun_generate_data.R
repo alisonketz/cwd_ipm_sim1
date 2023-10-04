@@ -6,10 +6,11 @@ ageperiod_surv_foi_sim_data <- function(
     period_effect,
     nT_age,
     nT_period,
-    prop_recap = 0.03
+    prop_recap = 0.03,
+    processnum = 0
     ) {
   
-  set.seed(12345)
+  set.seed(12345 + processnum)
   
   # sample size of individuals from each year
   n_years <- 5
