@@ -10,9 +10,9 @@
 # out <- mcmc.list(mcmcout1)
 # fit_sum <- summarize(out)
 
-modelid <- "D"
+modelid <- "E"
 
-load(paste0("results/",modelid,"/mcmcout_",modelid,".Rdata"))
+# load(paste0("results/",modelid,"/mcmcout_",modelid,".Rdata"))
 
 
 # fit_sum <- mcmcout$summary
@@ -297,6 +297,201 @@ age_effect_plot <- ggplot(data =out_age_effect,aes(x = weeks))+
 )
 age_effect_plot
 ggsave(paste0("figures/",modelid,"/age_effect_",modelid,".png"),age_effect_plot, height = 6, width = 8)
+
+
+###############################################
+###
+### Plot of incidence - derived parameter
+### model caculates incidence for each year
+### but it is actually constant across years
+###
+###############################################
+
+psi_out <- data.frame(psi = fit_sum[grep("psi", rownames(fit_sum)), 1],
+      lower = fit_sum[grep("psi", rownames(fit_sum)), 4],
+      upper = fit_sum[grep("psi", rownames(fit_sum)), 5],
+      age = rep(1:n_age, n_year))
+psi_out <- psi_out[1:n_age,]
+rownames(psi_out) <- NULL
+psi_out$age <- as.factor(psi_out$age)
+#remove age == 6, because same as 5, then setting age classes
+psi_out <- psi_out %>% filter(age!=6)
+psi_out$age <- NULL
+psi_out$agegroups <- 1:n_ageclass
+
+#extending output dataframe for step plot
+psi_out <- rbind(psi_out,psi_out[nrow(psi_out),])
+psi_out$agegroups[nrow(psi_out)] <- psi_out$agegroups[nrow(psi_out)] + 1
+psi_out$agegroups <- psi_out$agegroups - 1
+psi_out$psi_true <- c(psi_true,psi_true[length(psi_true)])
+
+
+psi_step_plot <- ggplot(data=psi_out)+
+  geom_rect(aes(xmin=agegroups,
+                xmax=lead(agegroups),
+                ymin=lower,
+                ymax=upper),
+            fill=pillement_pal[1], alpha = .4) +
+  geom_step(aes(x=agegroups,y=psi),size = 1.5, color = pillement_pal[1])+
+  geom_step(aes(x=agegroups,y=psi_true),linetype = "dashed",size = 1.5)+
+  ggtitle("Incidence (Annual Survival Probability)")+
+  theme_bw()+xlab("Age Class")+ylab("Incidence")+
+  scale_x_continuous(breaks = (1:n_ageclass)-.5,labels =c("Fawn","1.5","2.5","3.5","4.5-5.5","6.5+"))+
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 14),
+        plot.title = element_text(size = 16)
+  )
+
+psi_step_plot
+
+ggsave(paste0("figures/",modelid,"/psi_step_plot_",modelid,".png"),
+      psi_step_plot,
+      height = 6,
+      width = 8)
+
+####################################################
+###
+### Plot of annual Susceptible survival probability
+###
+####################################################
+# fit_sum[grep("sn_sus", rownames(fit_sum)), ]
+
+df_sn_sus <- data.frame(survival = fit_sum[grep("sn_sus", rownames(fit_sum)), 1],
+      lower = fit_sum[grep("sn_sus", rownames(fit_sum)), 4],
+      upper = fit_sum[grep("sn_sus", rownames(fit_sum)), 5],
+      age = rep(1:n_age, n_year),
+      year = rep(1:n_year,each = n_age),)
+
+df_sn_sus$age <- as.factor(df_sn_sus$age)
+levels(df_sn_sus$age) <- c("Fawn",as.character(1:5),"6+")
+df_sn_sus$sn_sus_true <- c(sn_sus_true)
+
+sn_sus_plot <- ggplot(data=df_sn_sus) +
+                geom_point(aes(x= year,y=survival,color = age),size = 4,alpha = .6) +
+            #     facet_wrap(~age)+
+            #     geom_point(aes(x= year,y=sn_sus_true),size = 4,shape =5) +
+                theme_bw()+
+                ylab("Annual Survival Probability May 15-May14 the following year")+
+                xlab("Year")+
+                ylim(0,1)+
+                scale_color_manual("Age", values = renoir_pal) +
+                theme(axis.text = element_text(size = 14),
+                      axis.title = element_text(size = 16),
+                      strip.text = element_text(size = 16),
+                      legend.title = element_text(size = 16),
+                      legend.text = element_text(size = 14)
+                )
+sn_sus_plot
+ggsave(paste0("figures/",modelid,"/sn_sus_mn_",modelid,".png"),
+            sn_sus_plot,
+            height = 6,
+            width = 8)
+
+####################################################
+###
+### Plot of annual Susceptible survival probability
+### Faceting by age and including truth 
+###
+####################################################
+
+sn_sus_plot_ci <- ggplot(data=df_sn_sus) +
+                geom_point(aes(x= year,y=survival,color = age),size = 3,alpha = .6) +
+                geom_errorbar(aes(x= year,ymin=lower, ymax=upper,color = age), width=.3)+
+                geom_point(aes(x= year,y=sn_sus_true),size = 3,alpha = .6,shape = 5) +
+                facet_wrap(~age, nrow  = 2) +
+                theme_bw()+
+                ylab("Annual Survival Probability")+
+                xlab("Year")+
+                ylim(0,1)+
+                scale_color_manual("Age",values=renoir_pal)+
+                theme(axis.text = element_text(size = 12),
+                      axis.title = element_text(size = 16),
+                      strip.text = element_text(size = 16),
+                      legend.title = element_text(size = 16),
+                      legend.text = element_text(size = 14),
+                      axis.text.x = element_text(angle = 45,hjust = 1)
+                )
+sn_sus_plot_ci
+
+ggsave(paste0("figures/",modelid,"/annual_survival_sn_sus_ci","_",modelid,".png"),
+              sn_sus_plot_ci,height = 6, width = 10.5)
+
+
+####################################################
+###
+### Plot of annual Infected survival probability
+###
+####################################################
+
+#############################
+### sn_inf
+#############################
+# fit_sum[grep("sn_inf", rownames(fit_sum)), ]
+
+df_sn_inf <- data.frame(survival = fit_sum[grep("sn_inf", rownames(fit_sum)), 1],
+      lower = fit_sum[grep("sn_inf", rownames(fit_sum)), 4],
+      upper = fit_sum[grep("sn_inf", rownames(fit_sum)), 5],
+      age = rep(1:n_age, n_year),
+      year = rep(1:n_year,each = n_age))
+
+df_sn_inf$age <- as.factor(df_sn_inf$age)
+levels(df_sn_inf$age) <- c("Fawn",as.character(1:5),"6+")
+df_sn_inf$sn_inf_true <- c(sn_inf_true)
+df_sn_inf <- df_sn_inf%>%filter(age!="Fawn")
+
+sn_inf_plot <- ggplot(data=df_sn_inf) +
+                geom_point(aes(x= year,y=survival,color = age),size = 4,alpha = .6) +
+            #     facet_wrap(~age)+
+            #     geom_point(aes(x= year,y=sn_inf_true),size = 4,shape =5) +
+                theme_bw()+
+                ylab("Annual Survival Probability May 15-May14 the following year")+
+                xlab("Year")+
+                ylim(0,1)+
+                scale_color_manual("Age", values = renoir_pal) +
+                theme(axis.text = element_text(size = 14),
+                      axis.title = element_text(size = 16),
+                      strip.text = element_text(size = 16),
+                      legend.title = element_text(size = 16),
+                      legend.text = element_text(size = 14)
+                )
+sn_inf_plot
+ggsave(paste0("figures/",modelid,"/sn_inf_mn_",modelid,".png"),
+            sn_inf_plot,
+            height = 6,
+            width = 8)
+
+
+####################################################
+###
+### Plot of annual Infected survival probability
+### Faceting by age and including truth 
+###
+####################################################
+
+sn_inf_plot_ci <- ggplot(data=df_sn_inf) +
+                geom_point(aes(x= year,y=survival,color = age),size = 3,alpha = .6) +
+                geom_errorbar(aes(x= year,ymin=lower, ymax=upper,color = age), width=.3)+
+                geom_point(aes(x= year,y=sn_inf_true),size = 3,alpha = .6,shape = 5) +
+                facet_wrap(~age, nrow  = 2) +
+                theme_bw()+
+                ylab("Annual Survival Probability")+
+                xlab("Year")+
+                ylim(0,1)+
+                scale_color_manual("Age",values=renoir_pal)+
+                theme(axis.text = element_text(size = 12),
+                      axis.title = element_text(size = 16),
+                      strip.text = element_text(size = 16),
+                      legend.title = element_text(size = 16),
+                      legend.text = element_text(size = 14),
+                      axis.text.x = element_text(angle = 45,hjust = 1)
+                )
+sn_inf_plot_ci
+
+ggsave(paste0("figures/",modelid,"/annual_survival_sn_inf_ci","_",modelid,".png"),
+              sn_inf_plot_ci,height = 6, width = 10.5)
 
 ##################################################
 ##################################################

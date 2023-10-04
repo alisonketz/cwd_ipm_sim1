@@ -5,7 +5,6 @@
 nimData <- list(
     Z_period = Z_period,
     Z_age = Z_age,
-    age_lookup = age_lookup,
     y_icap_cens = 1,
     icap_cens_e_age = df_fit_icap_cens$e_age,
     icap_cens_r_age = df_fit_icap_cens$r_age,
@@ -44,6 +43,10 @@ nimConsts <- list(
     nT_age_short = nT_age_short,
     nT_age_surv_aah = nT_age_surv_aah,
     n_age = n_age,
+    age_lookup = age_lookup,
+    yr_start_age = yr_start_age,
+    n_yr_start_age = n_yr_start_age,
+    yr_start_pop = yr_start_pop,
     nknots_age = nknots_age,
     nknots_period = nknots_period,
     nIcapCens = nrow(df_fit_icap_cens),
@@ -71,13 +74,12 @@ initsFun <- function()list(
     sda_period = runif(1, .1, 1),
     alpha_period = rnorm(nknots_period, 0, 1),
     tau_age_foi = runif(1, 1.5, 1.7),
-    foi_age_effect = c(rnorm(1, -10.4, sd = .1),
-                  rnorm(1, -8.5, sd = .1),
-                  rnorm(1, -7.2, sd = .1),
-                  rnorm(1, -6.7, sd = .1),
-                  rnorm(1, -6.7, sd = .1),
+    foi_age_effect = c(rnorm(1, -6.4, sd = .1),
                   rnorm(1, -6.5, sd = .1),
-                  rnorm(1, -6.4, sd = .1))
+                  rnorm(1, -6.2, sd = .1),
+                  rnorm(1, -6.1, sd = .1),
+                  rnorm(1, -6, sd = .1),
+                  rnorm(1, -5, sd = .1))
     )
 nimInits <- initsFun()
 
@@ -140,9 +142,9 @@ CnimMCMC <- compileNimble(nimMCMC,
                          project = Rmodel)
 # for(i in 1:10){beepr::beep(1)}
 
-reps <- 5000
+reps <- 10
 bin <- reps * .5
-n_chains <- 3
+n_chains <- 1
 
 # set.seed(1001)
 starttime <- Sys.time()

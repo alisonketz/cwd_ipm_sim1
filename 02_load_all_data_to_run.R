@@ -6,32 +6,32 @@
 ###
 #######################################################################
 
-load("datafiles/fit_sum_N.Rdata")
+load("datafiles/fit_sum_finaldat.Rdata")
 
 n_year  <- 5
 
 n_ageclassm <- 6
 n_ageclassf <- 7
-n_ageclass <- n_ageclassf
+n_ageclass <- n_ageclassm
 
 n_agef <- 10
 n_agem <- 7
-n_age <- n_agef
+n_age <- n_agem
 
 nT_age_short_f <- 52 * (n_agef - 1) + 2
 nT_age_surv_aah_f <- 52 * n_agef + 2
 nT_age_short_m <- 52 * (n_agem - 1) + 1
 nT_age_surv_aah_m <- 52 * n_agem + 1 
 
-nT_age_short <- nT_age_short_f
-nT_age_surv_aah <- nT_age_surv_aah_f
+nT_age_short <- nT_age_short_m
+nT_age_surv_aah <- nT_age_surv_aah_m
 
 period_effect_true <- fit_sum[grep("period_effect_surv", rownames(fit_sum)), 1]
 nT_period <- length(period_effect_true)
 age_effect_true <- fit_sum[ grep("age_effect", rownames(fit_sum)), 1]
 nT_age <- length(age_effect_true)
 beta0_survival_sus_true <- fit_sum[grep("beta0_survival_sus",
-                                   rownames(fit_sum)), 1]
+                                   rownames(fit_sum)), 1] 
 
 beta0_survival_inf_true <- fit_sum[grep("beta0_survival_inf",
                                    rownames(fit_sum)), 1]
@@ -59,7 +59,11 @@ m_age_foi_true <- c(rep(m_age_foi[1:4], each = 52),
 m_age_foi_true <- c(m_age_foi_true,rep(m_age_foi[6],
                     nT_age - length(m_age_foi_true)))
 
-age_foi <- f_age_foi
+age_foi <- m_age_foi
+
+#scale these for the males, since using male foi
+beta0_survival_sus_true <- beta0_survival_sus_true + beta_male_true
+beta0_survival_inf_true <- beta0_survival_inf_true + beta_male_true
 
 
 ##################################################################
@@ -71,6 +75,6 @@ age_foi <- f_age_foi
 
 beta0_survival_sus <- beta0_survival_sus_true
 beta0_survival_inf <- beta0_survival_inf_true
-foi_age_effect <- f_age_foi_true
+foi_age_effect <- m_age_foi_true
 age_effect <- age_effect_true
 period_effect <- period_effect_true

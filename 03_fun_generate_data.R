@@ -78,8 +78,8 @@ ageperiod_surv_foi_sim_data <- function(
   weeks_entry <- 12
   left_yr <- matrix(NA,n_years,n_per_yr)
   for(i in 1:n_years){
-	left_yr[i,] <- nimble::rcat(n_per_yr,
-          prob = rep(1 / weeks_entry, weeks_entry)) + (i - 1) * 52
+    left_yr[i,] <- nimble::rcat(n_per_yr,
+    prob <- rep(1 / weeks_entry, weeks_entry)) + (i - 1) * 52
   }
   left_period <- c(t(left_yr))
 

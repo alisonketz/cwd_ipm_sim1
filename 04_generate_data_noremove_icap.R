@@ -36,7 +36,7 @@ dat <- ageperiod_surv_foi_sim_data(
 ### because we aren't accounting for 
 ### disease-associated mortality in the generating function
 ##############################################################
-icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
+# icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
 # icap_eval_plot <- ggplot(data = icap_eval_df) +
 #       geom_histogram(aes(x = left_age),bins = 50) +
 #       theme_bw() +

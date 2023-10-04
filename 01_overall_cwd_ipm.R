@@ -48,6 +48,13 @@ library(ggh4x)
 
 source("support_functions.R")
 
+
+###########################################################
+### Functions for Efficient Calculations
+###########################################################
+
+source("09_calculations.R")
+
 ###############################################################
 # Load "Data" i.e. posterior summary stats from data model fit
 ###############################################################
@@ -58,9 +65,9 @@ source("02_load_all_data_to_run.R")
 # Generate simulated data
 ###############################################################
 
-source("04_generate_data.R")
+source("04_generate_data_noremove_icap.R")
+# source("04_generate_data_equal_weight_rm.R")
 # source("04_generate_data_weighted_icap.R")
-# source("04_generate_data_noremove_icap.R")
 
 ###############################################################
 # Partition simulated data into cases
@@ -82,11 +89,11 @@ source("07_prelim_foi.R")
 
 source("08_distributions.R")
 
-###########################################################
-### Functions for Efficient Calculations
-###########################################################
+# ###########################################################
+# ### Functions for Efficient Calculations
+# ###########################################################
 
-source("09_calculations.R")
+# source("09_calculations.R")
 
 ###########################################################
 ### Run model
