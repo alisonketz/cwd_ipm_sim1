@@ -13,7 +13,8 @@ dat <- ageperiod_surv_foi_sim_data(
             age_effect = age_effect_true,
             period_effect = period_effect_true,
             nT_age = nT_age,
-            nT_period = nT_period
+            nT_period = nT_period,
+            processnum = processnum
             )
 
 # table(dat$pos1)
@@ -45,7 +46,8 @@ dat <- ageperiod_surv_foi_sim_data(
 ### because we aren't accounting for 
 ### disease-associated mortality in the generating function
 ##############################################################
-icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE])
+
+icap_eval_df <- data.frame(left_age = dat$left_age[dat$pos1==TRUE& dat$rt_censor != 1])
 icap_eval_plot <- ggplot(data = icap_eval_df) +
       geom_histogram(aes(x = left_age),bins = 50) +
       theme_bw() +
@@ -84,8 +86,8 @@ ggsave(paste0("figures/icap_eval_weights.png"),
       width = 8)
 
 
-n_remove <- sum(dat$pos1) - round(sum(dat$pos1)/5)
-indx_remove <- sample(which(dat$pos1==TRUE),n_remove,replace=FALSE) 
+n_remove <- sum(dat$pos1& dat$rt_censor != 1) - round(sum(dat$pos1& dat$rt_censor != 1)/5)
+indx_remove <- sample(which(dat$pos1==TRUE & dat$rt_censor != 1),n_remove,replace=FALSE) 
 n_ind <- dat$n_ind - n_remove
 
 

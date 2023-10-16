@@ -17,7 +17,7 @@ age_lookup_m <- c(rep(1:4, each = 52),
 age_lookup_m <- c(age_lookup_m,
                   rep(6, nT_age - length(age_lookup_m)))
 
-age_lookup <- age_lookup_f
+age_lookup <- age_lookup_m
 
 # ################################################################
 # ###

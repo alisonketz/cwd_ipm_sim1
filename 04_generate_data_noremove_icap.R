@@ -13,7 +13,8 @@ dat <- ageperiod_surv_foi_sim_data(
             age_effect = age_effect_true,
             period_effect = period_effect_true,
             nT_age = nT_age,
-            nT_period = nT_period
+            nT_period = nT_period,
+            processnum = processnum
             )
 
 # table(dat$pos1)

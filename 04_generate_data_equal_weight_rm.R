@@ -4,9 +4,6 @@
 ###
 ##################################################################
 
-processnum <- 0
-set.seed(10000 + processnum)
-
 source("03_fun_generate_data.R")
 
 dat <- ageperiod_surv_foi_sim_data(
@@ -49,20 +46,21 @@ dat <- ageperiod_surv_foi_sim_data(
 ### because we aren't accounting for 
 ### disease-associated mortality in the generating function
 ##############################################################
-
-n_remove <- sum(dat$pos1) - round(sum(dat$pos1)/5)
+n_remove <- sum(dat$pos1 & dat$rt_censor != 1) - round(sum(dat$pos1 & dat$rt_censor != 1)/5)
 png("hist_icap_leftage_toweight.png")
 hist(dat$left_age[dat$pos1==1],breaks = 100)
 dev.off()
 
-
-indx_remove <- sample(which(dat$pos1 == TRUE),
+set.seed(10000 +processnum)
+indx_remove <- sample(which(dat$pos1 == TRUE & dat$rt_censor != 1),
                       n_remove,
                       replace = FALSE,
-                      prob = dat$left_age[dat$pos1==1]/sum(dat$left_age[dat$pos1==1])
+                      prob = dat$left_age[dat$pos1==1& dat$rt_censor != 1]/sum(dat$left_age[dat$pos1==1& dat$rt_censor != 1])
                       ) 
 n_ind <- dat$n_ind - n_remove
 
+
+set.seed(1000 +processnum)
 
 ##############################################################
 ###

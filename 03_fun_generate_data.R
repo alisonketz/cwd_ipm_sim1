@@ -6,7 +6,6 @@ ageperiod_surv_foi_sim_data <- function(
     period_effect,
     nT_age,
     nT_period,
-    prop_recap = 0.03,
     processnum = 0
     ) {
   

@@ -42,18 +42,14 @@ library(tidyr)
 library(ggridges)
 library(ggh4x)
 
+processnum  <- 100
+set.seed(processnum + 1000)
+
 ###########################################################
 ### Source summary function for posteriors
 ###########################################################
 
 source("support_functions.R")
-
-
-###########################################################
-### Functions for Efficient Calculations
-###########################################################
-
-source("09_calculations.R")
 
 ###############################################################
 # Load "Data" i.e. posterior summary stats from data model fit
@@ -93,7 +89,7 @@ source("08_distributions.R")
 # ### Functions for Efficient Calculations
 # ###########################################################
 
-# source("09_calculations.R")
+source("09_calculations.R")
 
 ###########################################################
 ### Run model
